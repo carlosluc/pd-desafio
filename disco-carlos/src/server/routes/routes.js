@@ -7,5 +7,6 @@ module.exports = function(app) {
    
    app.route('/disco/:id')
     .get(disco.findBy)
+    .post(disco.update)
     .delete(disco.delete);
 };

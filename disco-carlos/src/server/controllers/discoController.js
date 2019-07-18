@@ -12,13 +12,13 @@ exports.findAll = function(req, res) {
 };
 
 exports.create = function(req, res) {
-  var new_disco = new Task(req.body);
+  var new_disco = new Disco(req.body);
 
    if(!new_disco.id){
-        res.status(400).send({ error:true, message: 'Please provide task/status' });
+        res.status(400).send({ error:true, message: 'Please provide all infos' });
    }
     else{
-        Disco.create(new_task, function(err, disco) {
+        Disco.create(new_disco, function(err, disco) {
             if (err)
             res.send(err);
             res.json(disco);
@@ -28,7 +28,7 @@ exports.create = function(req, res) {
 
 
 exports.findBy = function(req, res) {
-  Disco.findBy(req.params.id, function(err, disco) {
+  Disco.findById(req.params.id, function(err, disco) {
     if (err)
       res.send(err);
     res.json(disco);
@@ -36,7 +36,7 @@ exports.findBy = function(req, res) {
 };
 
 
-exports.put = function(req, res) {
+exports.update = function(req, res) {
   Disco.updateById(req.params.id, new Disco(req.body), function(err, disco) {
     if (err)
       res.send(err);

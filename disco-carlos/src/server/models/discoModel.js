@@ -19,7 +19,7 @@ Disco.create = function (newDisco, result) {
 };
 
 Disco.findById = function (id, result) {
-        sql.query("Select * from disco where id = ? ", taskId, function (err, res) {             
+        sql.query("Select * from disco where id = ? ", id, function (err, res) {             
                 if(err) {
                     console.log("error: ", err);
                     result(err, null);
@@ -46,7 +46,7 @@ Disco.findAll = function (result) {
 };
 
 Disco.updateById = function(id, disco, result){
-  sql.query("UPDATE disco SET disco = ? WHERE id = ?", [disco.id, id], function (err, res) {
+  sql.query("UPDATE disco SET id = ? WHERE id = ?", [disco.id, id], function (err, res) {
           if(err) {
               console.log("error: ", err);
                 result(null, err);
@@ -57,7 +57,7 @@ Disco.updateById = function(id, disco, result){
             }); 
 };
 
-Disco.remove = function(id, result){
+Disco.delete = function(id, result){
      sql.query("DELETE FROM disco WHERE id = ?", [id], function (err, res) {
 
                 if(err) {
