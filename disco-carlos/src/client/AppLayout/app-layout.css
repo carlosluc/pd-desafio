@@ -1,0 +1,39 @@
+.app-content {
+  background: #ffffff;
+  height: 80%;
+  width: 100%;
+}
+
+.ant-layout-header {
+  background: transparent;
+}
+
+.card-box {
+  margin: 5px;
+  padding: 10px;
+  border-style: solid;
+  border-color: gray;
+  border-width: 1px;
+  width: 400px;
+}
+
+.submit-button{
+  width: 351px;
+  height: 54px;
+  border-radius: 6px;
+  background-color: #343434;
+}
+
+.submit-button:hover{
+  background-color: #343434;
+  border: none;
+}
+
+.card-box {
+  margin: 5px;
+  padding: 10px;
+  border-style: solid;
+  border-color: gray;
+  border-width: 1px;
+  width: 400px;
+}
