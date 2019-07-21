@@ -8,7 +8,7 @@ const ButtonAdd = (props) => (
     <Route render={({ history}) => (
       <button
         type='button'
-        onClick={() => { history.push({pathname:'/disc/', props:{collectionId:props.collectionId} })}}
+        onClick={() => { history.push({pathname:'/disc/', state:{collectionId:props.collectionId}})}}
       >
         Adicionar disco
       </button>
@@ -52,19 +52,19 @@ class Collection extends Component {
         super(props)
         this.state = {
             collectionId: this.props.match.params.id,
+            collectionName: this.props.history.location.state? this.props.history.location.state.collectionName:undefined,
             discs: []
         }
     }
 
     componentDidMount(){
-        //faz a busca
-        console.log("collectionId no didMount: "+this.state.collectionId)
-        if(!this.state.collectionId){
-            // <Route render={history.replace('/'}/>
+        if(!this.state.collectionName || !this.state.collectionId){
             this.props.history.replace({
                 pathname: '/',
               })
         }
+    
+        //faz a busca
 
         this.setState(
             {discs: [{ "id": "1"}]}
@@ -74,10 +74,10 @@ class Collection extends Component {
     render() {
         let discs = this.state.discs
         let collectionId = this.state.collectionId
-        console.log("collectionId no render: "+collectionId)
+        let collectionName= this.state.collectionName
         return (
             <div>
-                <h2>NOME DA COLECAO</h2>
+                <h2>{collectionName}</h2>
                 <Row>
                     <div>
                         {discs.map(disc => <CardBuilder key={disc.id} id={disc.id} name={disc.name} band={disc.band} collectionId={collectionId}/>)}

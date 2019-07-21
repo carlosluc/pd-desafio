@@ -18,7 +18,6 @@ class DiscForm extends Component {
     this.addDisc = this.addDisc.bind(this)
 }
 
-
   componentDidMount () {
     
     if(!this.state.collectionId){

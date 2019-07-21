@@ -42,9 +42,12 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
 );
 
 class CollectionsForm extends Component {
-  state = {
-    visible: false,
-  };
+    constructor(props){
+        super(props)
+        this.state = {
+            visible: false,
+        }
+    }
 
   showModal = () => {
     this.setState({ visible: true });
@@ -64,6 +67,7 @@ class CollectionsForm extends Component {
       console.log('Received values of form: ', values);
       form.resetFields();
       this.setState({ visible: false });
+      this.props.fetchData()
     });
   };
 
