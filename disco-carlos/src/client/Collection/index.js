@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types'
 import { Card, Row, Col, Icon, Button } from 'antd'
 import { Route } from 'react-router-dom'
+import DiscForm from '../DiscForm'
+
 
 
 const ButtonAdd = (props) => (
@@ -38,7 +40,7 @@ const CardBuilder = (props) => {
         <div className='icons-list'>
             <p>
                 <Row >
-                <Col span={12}><ButtonEdit id={props.id} collectionId={props.collectionId}/></Col>
+                <Col span={12}><DiscForm fetchData={props.fetchData} id={props.id} name={props.name} band={props.band} songs={props.songs} collectionId={props.collectionId}/> </Col>
                 <Col span={12}><Icon type='dollar' /> REMOVER </Col>
                 </Row>
             </p>
@@ -71,38 +73,41 @@ class Collection extends Component {
         )
     }
 
+    fetchData = () => {
+        console.log("fetchhh")
+        this.setState(
+            
+                {discs:[{"id":"1"},{"id":"2"}]}
+            
+        )
+    }
+
     render() {
         let discs = this.state.discs
         let collectionId = this.state.collectionId
         let collectionName= this.state.collectionName
         return (
-            <div>
+            <React.Fragment>
                 <h2>{collectionName}</h2>
                 <Row>
                     <div>
-                        {discs.map(disc => <CardBuilder key={disc.id} id={disc.id} name={disc.name} band={disc.band} collectionId={collectionId}/>)}
+                        {discs.map(disc => <CardBuilder key={disc.id} id={disc.id} name={disc.name} band={disc.band} songs={disc.songs} collectionId={collectionId} fetchData={() => this.fetchData()}/>)}
                     </div>
                 </Row>        
-            <ButtonAdd collectionId={collectionId}/> 
-            </div>
+            <DiscForm fetchData={() => this.fetchData()} collectionId={collectionId}/>             
+            </React.Fragment>
         )
     }
 
 }
 
-Collection.propTypes = {
-    match: PropTypes.shape({
-      params: PropTypes.shape({
-        id: PropTypes.string
-      })
-    })
-  }
-
 CardBuilder.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string,
     band: PropTypes.string,
-    collectionId: PropTypes.string
+    songs: PropTypes.array,
+    collectionId: PropTypes.string,
+    fetchData: PropTypes.func
 }
 
 export default Collection
