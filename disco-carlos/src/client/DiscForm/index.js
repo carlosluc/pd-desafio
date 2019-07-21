@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
 
-class ResourceForm extends Component {
+class DiscForm extends Component {
   constructor (props) {
     super(props)
 
@@ -13,18 +13,22 @@ class ResourceForm extends Component {
       },
       success: undefined,
       id: this.props.match.params.id,
-      collectionId: this.props.match.collectionId
+      collectionId: this.props.history.location.state? this.props.history.location.state.collectionId:undefined
     }
     this.addDisc = this.addDisc.bind(this)
-  }
+}
+
 
   componentDidMount () {
+    
     if(!this.state.collectionId){
-        // <Route render={history.replace('/'}/>
         this.props.history.replace({
             pathname: '/',
           })
     }
+
+    console.log("collectionId no didMount do disc ater if : "+this.state.collectionId)
+
 
     if (this.state.id) {
       this.getDiscForEdit()
@@ -99,4 +103,4 @@ class ResourceForm extends Component {
   }
 }
 
-export default ResourceForm
+export default DiscForm

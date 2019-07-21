@@ -1,6 +1,15 @@
 import React, {Component} from 'react'
+import { Route } from 'react-router-dom'
 import { Card, Row, Col, Icon } from 'antd'
 import PropTypes from 'prop-types'
+
+const OpenCollection = (props) => (
+    <Route render={({ history}) => (
+      <p>
+      <a onClick={() => { history.push('/collection/'+ props.id)}}>Abrir coleção<Icon type='arrow-right' /></a>
+      </p>
+    )} />
+)
 
 const CardBuilder = (props) =>
     <Col className='card-box' span={6}>
@@ -9,9 +18,7 @@ const CardBuilder = (props) =>
             <p>Card content</p>
             <p>Card content</p>
         </Card>
-        <p>
-            <a onClick={() => { document.location.href = 'collection/' + props.id }}>See collection <Icon type='arrow-right' /></a>
-        </p>
+        <OpenCollection id={props.id }/>
     </Col>
 
 class Collections extends Component {

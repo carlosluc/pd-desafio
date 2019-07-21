@@ -8,7 +8,7 @@ const ButtonAdd = (props) => (
     <Route render={({ history}) => (
       <button
         type='button'
-        onClick={() => { history.push('/disc/', props.collectionId)}}
+        onClick={() => { history.push({pathname:'/disc/', props:{collectionId:props.collectionId} })}}
       >
         Adicionar disco
       </button>
@@ -16,19 +16,22 @@ const ButtonAdd = (props) => (
 )
 
 const ButtonEdit = (props) => {
+    console.log("porps do edit "+props)
     return(
     <Route render={({ history}) => (
       <button
         type='button'
-        onClick={() => { history.push('/disc/'+props.id, props.collectionId) }}
+        onClick={() => { history.push({pathname:'/disc/'+props.id, state:{collectionId:props.collectionId} })}}
       >
         Editar
       </button>
     )} />
 )}
 
-const CardBuilder = (props) =>
-    <Col className='card-box' span={6}>
+const CardBuilder = (props) => {
+    console.log("collectionId no cardBuild: "+props.collectionId)
+
+    return (<Col className='card-box' span={6}>
         <Card title={props.name+" - "+props.band}>
             <p>LISTA DAS MUSICAS</p>
         </Card>
@@ -40,7 +43,8 @@ const CardBuilder = (props) =>
                 </Row>
             </p>
         </div>
-    </Col>
+    </Col>)
+}
 
 class Collection extends Component {
 
@@ -54,7 +58,7 @@ class Collection extends Component {
 
     componentDidMount(){
         //faz a busca
-        console.log(this.state.collectionId)
+        console.log("collectionId no didMount: "+this.state.collectionId)
         if(!this.state.collectionId){
             // <Route render={history.replace('/'}/>
             this.props.history.replace({
@@ -69,7 +73,8 @@ class Collection extends Component {
 
     render() {
         let discs = this.state.discs
-        let collectionId = this.setState.collectionId
+        let collectionId = this.state.collectionId
+        console.log("collectionId no render: "+collectionId)
         return (
             <div>
                 <h2>NOME DA COLECAO</h2>
