@@ -14,10 +14,7 @@ app.use(bodyParser.json());
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, DELETE"
-  );
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE");
   next();
 });
 
