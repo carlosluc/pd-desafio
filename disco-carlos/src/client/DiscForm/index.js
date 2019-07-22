@@ -1,109 +1,57 @@
-import React, {Component} from 'react'
-import { Button, Modal, Form, Input, Icon } from 'antd';
-import PropTypes from 'prop-types'
+import React, { Component } from "react";
+import { Button, Modal, Form, Input } from "antd";
+import PropTypes from "prop-types";
+import DiscService from "../Service/DiscService";
 
-let index = 0
+const DiscCreateForm = Form.create({ name: "form_in_modal" })(
+  class extends React.Component {
+    render() {
+      const { visible, onCancel, onCreate, form, name, band } = this.props;
+      const { getFieldDecorator } = form;
 
-const DiscCreateForm = Form.create({ name: 'form_in_modal' })(
-
-    class extends React.Component {
-        remove = k => {
-            const { form } = this.props;
-            const keys = form.getFieldValue('keys');
-
-            if (keys.length === 0) {
-            return;
-            }
-        
-            form.setFieldsValue({
-            keys: keys.filter(key => key !== k),
-            });
-        };
-        
-        add = () => {
-            const { form } = this.props;
-            const keys = form.getFieldValue('keys');
-            console.log("Key no ADD"+ keys)
-            const nextKeys = keys.concat(index++);
-            console.log("Next Key no ADD"+ nextKeys)
-
-            form.setFieldsValue({
-                keys: nextKeys,
-            });
-        };
-
-        render() {
-            const { visible, onCancel, onCreate, form, name, band, songs } = this.props;
-            const { getFieldDecorator, getFieldValue } = form;
-
-            console.log("render do props: name "+name+" band "+band+ " songs "+songs)
-            console.log("song 0" + songs[0])
-
-            getFieldDecorator('keys', { initialValue: songs });
-            const keys = getFieldValue('keys');
-            const formSongs = keys.map((k, index) => (
-            <Form.Item
-                label={index === 0 ? 'Músicas' : ''}
-                required={false}
-                key={k}
-            >
-                {getFieldDecorator(`songs[${k}]`,{initialValue:k})(<Input style={{ width: '60%', marginRight: 8 }} />)}
-                {keys.length > 1 ? (
-                <Icon
-                    className="dynamic-delete-button"
-                    type="minus-circle-o"
-                    onClick={() => this.remove(k)}
-                />
-                ) : null}
-            </Form.Item>));
-
-            return (
-            <Modal
-                visible={visible}
-                title="Create a new collection"
-                okText="Create"
-                onCancel={onCancel}
-                onOk={onCreate}
-            >
-                <Form layout="vertical">
-                <Form.Item label="Nome do disco">
-                    {getFieldDecorator('name', {initialValue:name,
-                    rules: [{ required: true, message: 'Por favor insira o nome do disco!' }],
-                    })(<Input />)}
-                </Form.Item>
-                <Form.Item label="Banda">
-                    {getFieldDecorator('band',{initialValue:band})(<Input type="textarea" />)}
-                </Form.Item>
-                
-                {formSongs}
-                
-                <Form.Item>
-                    <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
-                    <Icon type="plus" /> Adicionar música
-                    </Button>
-                </Form.Item>
-                </Form>
-            </Modal>
-            );
-        }
-    },
+      return (
+        <Modal
+          visible={visible}
+          title="Disco"
+          okText="Salvar"
+          onCancel={onCancel}
+          onOk={onCreate}
+        >
+          <Form layout="vertical">
+            <Form.Item label="Nome do disco">
+              {getFieldDecorator("name", {
+                initialValue: name,
+                rules: [
+                  {
+                    required: true,
+                    message: "Por favor insira o nome do disco!"
+                  }
+                ]
+              })(<Input />)}
+            </Form.Item>
+            <Form.Item label="Banda">
+              {getFieldDecorator("band", { initialValue: band })(
+                <Input type="textarea" />
+              )}
+            </Form.Item>
+          </Form>
+        </Modal>
+      );
+    }
+  }
 );
 
 class DiscForm extends Component {
-    constructor (props) {
-        super(props)
-    
-        this.state = {
-            name: this.props.name || 'q',
-            band: this.props.band || 'w',
-            songs: this.props.songs || ["a", "b"],
-          visible: false,
-          success: undefined,
-          id: this.props.id || '',
-          collectionId: this.props.collectionId || '',
-        }
-        // this.addDisc = this.addDisc.bind(this)
-    }
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      visible: false,
+      success: undefined,
+      id: this.props.id || undefined,
+      collectionId: this.props.collectionId || undefined
+    };
+  }
 
   showModal = () => {
     this.setState({ visible: true });
@@ -115,18 +63,30 @@ class DiscForm extends Component {
 
   handleCreate = () => {
     const { form } = this.formRef.props;
-    form.validateFields((err, values) => {
-        if (err) {
-            return;
-        }
+    form.validateFields(async (err, values) => {
+      if (err) {
+        return;
+      }
+      const { name, band } = values;
 
-        const { keys, songs } = values;
-        console.log('Received values of form: ', values);
-        console.log('Merged values:', keys.map(key => songs[key]));
+      if (this.state.id) {
+        await DiscService.updateDisc({
+          id: this.state.id,
+          name,
+          band,
+          collectionId: this.state.collectionId
+        });
+      } else {
+        await DiscService.createDisc({
+          name,
+          band,
+          collectionId: this.state.collectionId
+        });
+      }
 
-        form.resetFields();
-        this.setState({ visible: false });
-        this.props.fetchData()
+      form.resetFields();
+      this.setState({ visible: false });
+      this.props.fetchData();
     });
   };
 
@@ -135,23 +95,17 @@ class DiscForm extends Component {
   };
 
   render() {
-    console.log("id: "+this.state.id)
-    console.log("collectionid: "+this.state.collectionId)
+    let name = this.props.name || "";
+    let band = this.props.band || "";
 
-    let name = this.state.name
-    let band = this.state.band
-    let songs = this.state.songs
-
-    console.log("render: name "+name+" band "+band+ " songs "+songs)
-
-    var message
-    if(this.state.id){
-        message = "Editar"      
-    }else{
-        message = "Adicionar disco a coleção"
+    var message;
+    if (this.state.id) {
+      message = "Editar";
+    } else {
+      message = "Adicionar disco a coleção";
     }
     return (
-      <div>
+      <React.Fragment>
         <Button type="primary" onClick={this.showModal}>
           {message}
         </Button>
@@ -162,19 +116,15 @@ class DiscForm extends Component {
           onCreate={this.handleCreate}
           name={name}
           band={band}
-          songs={songs}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }
 
 DiscCreateForm.propTypes = {
-    name: PropTypes.string,
-    band: PropTypes.string,
-    songs: PropTypes.array,
-}
+  name: PropTypes.string,
+  band: PropTypes.string
+};
 
-export default DiscForm
-
-// ReactDOM.render(<CollectionsPage />, mountNode);
+export default DiscForm;

@@ -1,20 +1,9 @@
 var Disco = require('../models/discoModel.js');
 
-exports.findAll = function(req, res) {
-  Disco.findAll(function(err, disco) {
-
-    console.log('controller')
-    if (err)
-      res.send(err);
-      console.log('res', disco);
-    res.send(disco);
-  });
-};
-
 exports.create = function(req, res) {
   var new_disco = new Disco(req.body);
 
-   if(!new_disco.id){
+   if(!new_disco.name || !new_disco.collectionId){
         res.status(400).send({ error:true, message: 'Please provide all infos' });
    }
     else{
@@ -26,7 +15,6 @@ exports.create = function(req, res) {
     }
 };
 
-
 exports.findBy = function(req, res) {
   Disco.findById(req.params.id, function(err, disco) {
     if (err)
@@ -35,7 +23,6 @@ exports.findBy = function(req, res) {
   });
 };
 
-
 exports.update = function(req, res) {
   Disco.updateById(req.params.id, new Disco(req.body), function(err, disco) {
     if (err)
@@ -43,7 +30,6 @@ exports.update = function(req, res) {
     res.json(disco);
   });
 };
-
 
 exports.delete = function(req, res) {
   Disco.delete( req.params.id, function(err, disco) {

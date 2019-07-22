@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import { Button, Modal, Form, Input, Radio } from 'antd';
+import React, { Component } from "react";
+import { Button, Modal, Form, Input } from "antd";
+import CollectionService from "../Service/CollectionService";
 
-const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
-  // eslint-disable-next-line
+const CollectionCreateForm = Form.create({ name: "form_in_modal" })(
   class extends React.Component {
     render() {
       const { visible, onCancel, onCreate, form } = this.props;
@@ -10,44 +10,36 @@ const CollectionCreateForm = Form.create({ name: 'form_in_modal' })(
       return (
         <Modal
           visible={visible}
-          title="Create a new collection"
-          okText="Create"
+          title="Nova coleção"
+          okText="Salvar"
           onCancel={onCancel}
           onOk={onCreate}
         >
           <Form layout="vertical">
-            <Form.Item label="Title">
-              {getFieldDecorator('title', {
-                rules: [{ required: true, message: 'Please input the title of collection!' }],
+            <Form.Item label="Nome da coleção">
+              {getFieldDecorator("name", {
+                rules: [
+                  {
+                    required: true,
+                    message: "Por favor insira o nome da coleção!"
+                  }
+                ]
               })(<Input />)}
-            </Form.Item>
-            <Form.Item label="Description">
-              {getFieldDecorator('description')(<Input type="textarea" />)}
-            </Form.Item>
-            <Form.Item className="collection-create-form_last-form-item">
-              {getFieldDecorator('modifier', {
-                initialValue: 'public',
-              })(
-                <Radio.Group>
-                  <Radio value="public">Public</Radio>
-                  <Radio value="private">Private</Radio>
-                </Radio.Group>,
-              )}
             </Form.Item>
           </Form>
         </Modal>
       );
     }
-  },
+  }
 );
 
 class CollectionsForm extends Component {
-    constructor(props){
-        super(props)
-        this.state = {
-            visible: false,
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      visible: false
+    };
+  }
 
   showModal = () => {
     this.setState({ visible: true });
@@ -59,15 +51,18 @@ class CollectionsForm extends Component {
 
   handleCreate = () => {
     const { form } = this.formRef.props;
-    form.validateFields((err, values) => {
+    form.validateFields(async (err, values) => {
       if (err) {
         return;
       }
 
-      console.log('Received values of form: ', values);
+      const { name } = values;
+
+      await CollectionService.createCollection({ name });
+
       form.resetFields();
       this.setState({ visible: false });
-      this.props.fetchData()
+      this.props.fetchData();
     });
   };
 
@@ -77,9 +72,9 @@ class CollectionsForm extends Component {
 
   render() {
     return (
-      <div>
+      <React.Fragment>
         <Button type="primary" onClick={this.showModal}>
-          New Collection
+          Adicionar nova coleção
         </Button>
         <CollectionCreateForm
           wrappedComponentRef={this.saveFormRef}
@@ -87,11 +82,9 @@ class CollectionsForm extends Component {
           onCancel={this.handleCancel}
           onCreate={this.handleCreate}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }
 
-export default CollectionsForm
-
-// ReactDOM.render(<CollectionsPage />, mountNode);
+export default CollectionsForm;

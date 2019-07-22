@@ -1,11 +1,13 @@
 var sql = require('../config/db.js');
 
 var Disco = function(disco){
-    this.id = disco.id;
+    this.name = disco.name;
+    this.band = disco.band;
+    this.collectionId = disco.collectionId
 };
 
 Disco.create = function (newDisco, result) {    
-        sql.query("INSERT INTO disco set ?", newDisco, function (err, res) {
+        sql.query("INSERT INTO DISC set ?", newDisco, function (err, res) {
                 
                 if(err) {
                     console.log("error: ", err);
@@ -19,7 +21,7 @@ Disco.create = function (newDisco, result) {
 };
 
 Disco.findById = function (id, result) {
-        sql.query("Select * from disco where id = ? ", id, function (err, res) {             
+        sql.query("SELECT * FROM DISC WHERE id = ? ", id, function (err, res) {             
                 if(err) {
                     console.log("error: ", err);
                     result(err, null);
@@ -30,23 +32,8 @@ Disco.findById = function (id, result) {
             });   
 };
 
-Disco.findAll = function (result) {
-        sql.query("Select * from disco", function (err, res) {
-
-                if(err) {
-                    console.log("error: ", err);
-                    result(null, err);
-                }
-                else{
-                  console.log('disco : ', res);  
-
-                 result(null, res);
-                }
-            });   
-};
-
 Disco.updateById = function(id, disco, result){
-  sql.query("UPDATE disco SET id = ? WHERE id = ?", [disco.id, id], function (err, res) {
+  sql.query("UPDATE DISC SET name = ?, band = ? WHERE id = ?", [disco.name, disco.band, id], function (err, res) {
           if(err) {
               console.log("error: ", err);
                 result(null, err);
@@ -58,14 +45,13 @@ Disco.updateById = function(id, disco, result){
 };
 
 Disco.delete = function(id, result){
-     sql.query("DELETE FROM disco WHERE id = ?", [id], function (err, res) {
+     sql.query("DELETE FROM DISC WHERE id = ?", [id], function (err, res) {
 
                 if(err) {
                     console.log("error: ", err);
                     result(null, err);
                 }
                 else{
-               
                  result(null, res);
                 }
             }); 
