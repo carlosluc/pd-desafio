@@ -8,6 +8,6 @@ Entre na pasta disco-carlos e rode o seguinte comando:
 
 ## Executando a aplicação
 
-Entre no diretório /disco-carlos e execute o comando `npm run dev`
+Entre no diretório /disco-carlos e execute o comando `npm i` para instalar as dependências e logo após `npm run dev` para executar a aplicação.
 
 Boa diversão:)
